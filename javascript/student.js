@@ -10,6 +10,40 @@ studentIdInput?.addEventListener("input", function () {
 let students = JSON.parse(localStorage.getItem("students")) || [];
 let editingIndex = null;
 
+// Function to populate teacher dropdown
+function populateTeacherDropdown() {
+  const teachers = JSON.parse(localStorage.getItem("teachers")) || [];
+  const teacherSelect = document.getElementById("teacher");
+  teacherSelect.innerHTML = '<option value="">Select Teacher</option>';
+  teachers.forEach(teacher => {
+    teacherSelect.innerHTML += `<option value="${teacher.name}">${teacher.name} (${teacher.subject})</option>`;
+  });
+}
+
+// Function to populate class dropdown
+function populateClassDropdown() {
+  const classes = JSON.parse(localStorage.getItem("classes")) || [];
+  const classSelect = document.getElementById("class");
+  classSelect.innerHTML = '<option value="">Select Class</option>';
+  classes.forEach(cls => {
+    classSelect.innerHTML += `<option value="${cls.className}-${cls.section}">${cls.className}-${cls.section}</option>`;
+  });
+}
+
+// Function to generate roll number
+function generateRollNumber(className) {
+  const classStudents = students.filter(student => student.className === className);
+  return (classStudents.length + 1).toString().padStart(2, '0');
+}
+
+// Add a teacher field to the student object
+const teacherInput = document.createElement("input");
+teacherInput.setAttribute("type", "text");
+teacherInput.setAttribute("id", "teacher");
+teacherInput.setAttribute("placeholder", "Class Teacher");
+teacherInput.required = true;
+studentForm.insertBefore(teacherInput, studentForm.querySelector("button"));
+
 // Render Students Table
 function renderStudents() {
   studentTableBody.innerHTML = "";
@@ -19,8 +53,10 @@ function renderStudents() {
     row.innerHTML = `
       <td>${student.name}</td>
       <td>${student.className}</td>
-      <td>${student.id}</td>
-      <td colspan="2">
+      <td>${student.rollNumber}</td>
+      <td>${student.teacher}</td>
+      <td>${student.contactNumber}</td>
+      <td>
         ${
           isEditing
             ? `
@@ -47,11 +83,25 @@ studentForm?.addEventListener("submit", function (e) {
 
   const studentName = document.getElementById("name").value.trim();
   const className = document.getElementById("class").value.trim();
-  const studentId = studentIdInput.value.trim();
+  const teacher = document.getElementById("teacher").value.trim();
+  const contactNumber = document.getElementById("contactNumber").value.trim();
 
-  if (!studentName || !className || !studentId) return;
+  if (!studentName || !className || !teacher || !contactNumber) {
+    alert("Please fill in all fields");
+    return;
+  }
 
-  const newStudent = { name: studentName, className: className, id: studentId };
+  const rollNumber = editingIndex !== null 
+    ? students[editingIndex].rollNumber 
+    : generateRollNumber(className);
+
+  const newStudent = { 
+    name: studentName, 
+    className: className, 
+    rollNumber: rollNumber,
+    teacher: teacher,
+    contactNumber: contactNumber 
+  };
 
   if (editingIndex !== null) {
     students[editingIndex] = newStudent;
@@ -74,7 +124,8 @@ studentTableBody?.addEventListener("click", function (e) {
     const student = students[index];
     document.getElementById("name").value = student.name;
     document.getElementById("class").value = student.className;
-    studentIdInput.value = student.id;
+    document.getElementById("teacher").value = student.teacher;
+    document.getElementById("contactNumber").value = student.contactNumber;
     editingIndex = index;
     renderStudents();
   }
@@ -83,8 +134,9 @@ studentTableBody?.addEventListener("click", function (e) {
     const updatedName = document.getElementById("name").value.trim();
     const updatedClass = document.getElementById("class").value.trim();
     const updatedId = studentIdInput.value.trim();
+    const updatedTeacher = document.getElementById("teacher").value.trim();
 
-    students[index] = { name: updatedName, className: updatedClass, id: updatedId };
+    students[index] = { name: updatedName, className: updatedClass, id: updatedId, teacher: updatedTeacher };
     saveStudents();
     editingIndex = null;
     studentForm.reset();
@@ -126,6 +178,13 @@ if (toggleBtn) {
     localStorage.setItem("theme", isDark ? "dark" : "light");
   });
 }
+
+// Initialize dropdowns when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  populateTeacherDropdown();
+  populateClassDropdown();
+  renderStudents();
+});
 
 // Initial Render
 renderStudents();

@@ -27,13 +27,16 @@
 
     <form id="studentForm">
       <input type="text" id="name" placeholder="Student Name" required />
-      <input type="text" id="roll" placeholder="Roll Number" required />
-      <input type="text" id="class" placeholder="Class" required />
-      <input type="text" id="Contact Number" placeholder="Contact Number" required />
+      <select id="class" required>
+        <option value="">Select Class</option>
+      </select>
+      <select id="teacher" required>
+        <option value="">Select Teacher</option>
+      </select>
+      <input type="text" id="contactNumber" placeholder="Contact Number" required />
       <button type="submit">Add Student</button>
     </form>
 
-    
     <h3>Student List</h3>
     <table id="studentTable">
       <thead>
@@ -41,6 +44,8 @@
           <th>Name</th>
           <th>Class</th>
           <th>Roll No</th>
+          <th>Teacher</th>
+          <th>Contact</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -49,8 +54,6 @@
       </tbody>
     </table>
   </main>
-
-  
 
   <!-- Link to JS file -->
   <script src="javascript/student.js"></script>
