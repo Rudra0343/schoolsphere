@@ -4,119 +4,56 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Student Management</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header">
-      <div class="mdl-layout__header-row">
-        <span class="mdl-layout-title">🏫 School Management</span>
-        <div class="mdl-layout-spacer"></div>
-        <nav class="mdl-navigation mdl-layout--large-screen-only">
-          <a class="mdl-navigation__link" href="index.html">Dashboard</a>
-          <a class="mdl-navigation__link" href="students.html">Students</a>
-          <a class="mdl-navigation__link" href="teachers.html">Teachers</a>
-          <a class="mdl-navigation__link" href="classes.html">Classes</a>
-          <a class="mdl-navigation__link" href="signup.html">Sign Up</a>
-          <a class="mdl-navigation__link" href="login.html">Login</a>
-          <button id="themeToggle" class="mdl-button mdl-js-button mdl-button--icon">
-            <i class="material-icons">brightness_4</i>
-          </button>
-        </nav>
-      </div>
-    </header>
-    <div class="mdl-layout__drawer">
-      <span class="mdl-layout-title">School Management</span>
-      <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="index.html">Dashboard</a>
-        <a class="mdl-navigation__link" href="students.html">Students</a>
-        <a class="mdl-navigation__link" href="teachers.html">Teachers</a>
-        <a class="mdl-navigation__link" href="classes.html">Classes</a>
-        <a class="mdl-navigation__link" href="signup.html">Sign Up</a>
-        <a class="mdl-navigation__link" href="login.html">Login</a>
-      </nav>
-    </div>
+  <header>
+    <nav class="navbar">
+      <h1>🏫 School Management</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="students.html" class="active">Students</a></li>
+        <li><a href="teachers.html">Teachers</a></li>
+        <li><a href="classes.html">Classes</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
+        <li><a href="login.html">Login</a></li>
+        <button id="themeToggle" class="toggle-btn">🌙</button>
+    </ul>
+    </nav>
+  </header>
 
-    <main class="mdl-layout__content">
-      <div class="page-content">
-        <div class="mdl-grid">
-          <div class="mdl-cell mdl-cell--12-col">
-            <h2 class="mdl-typography--headline">Student Management</h2>
-            
-            <!-- Student Form Card -->
-            <div class="mdl-card mdl-shadow--2dp" style="width: 100%;">
-              <div class="mdl-card__title">
-                <h2 class="mdl-card__title-text">Add New Student</h2>
-              </div>
-              <div class="mdl-card__supporting-text">
-                <form id="studentForm" action="#">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="name" required>
-                    <label class="mdl-textfield__label" for="name">Student Name</label>
-                  </div>
+  <main class="dashboard">
+    <h2>Student Management</h2>
 
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <select class="mdl-textfield__input" id="class" required>
-                      <option value="">Select Class</option>
-                    </select>
-                  </div>
+    <form id="studentForm">
+      <input type="text" id="name" placeholder="Student Name" required />
+      <input type="text" id="roll" placeholder="Roll Number" required />
+      <input type="text" id="class" placeholder="Class" required />
+      <input type="text" id="Contact Number" placeholder="Contact Number" required />
+      <button type="submit">Add Student</button>
+    </form>
 
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <select class="mdl-textfield__input" id="teacher" required>
-                      <option value="">Select Teacher</option>
-                    </select>
-                  </div>
+    
+    <h3>Student List</h3>
+    <table id="studentTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Class</th>
+          <th>Roll No</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+    
+      </tbody>
+    </table>
+  </main>
 
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="contactNumber" required>
-                    <label class="mdl-textfield__label" for="contactNumber">Contact Number</label>
-                    <span class="mdl-textfield__error">Input is not a number!</span>
-                  </div>
-
-                  <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                    Add Student
-                  </button>
-                </form>
-              </div>
-            </div>
-
-            <!-- Student List Table -->
-            <div class="mdl-card mdl-shadow--2dp" style="width: 100%; margin-top: 32px;">
-              <div class="mdl-card__title">
-                <h2 class="mdl-card__title-text">Student List</h2>
-              </div>
-              <div class="mdl-card__supporting-text" style="width: 100%;">
-                <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="width: 100%;">
-                  <thead>
-                    <tr>
-                      <th class="mdl-data-table__cell--non-numeric">Name</th>
-                      <th class="mdl-data-table__cell--non-numeric">Class</th>
-                      <th>Roll No</th>
-                      <th class="mdl-data-table__cell--non-numeric">Teacher</th>
-                      <th>Contact</th>
-                      <th class="mdl-data-table__cell--non-numeric">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="studentTable">
-                    <!-- JS will populate this -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Dialog Polyfill for browsers that don't support <dialog> -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.5.6/dialog-polyfill.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.5.6/dialog-polyfill.min.css">
   
-  <script src="javascript/theme.js"></script>
+
+  <!-- Link to JS file -->
   <script src="javascript/student.js"></script>
+  
 </body>
 </html>
