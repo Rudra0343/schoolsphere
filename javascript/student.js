@@ -1,93 +1,88 @@
-const studentForm = document.getElementById("studentForm");
-const studentTableBody = document.querySelector("#studentTable tbody");
-const studentIdInput = document.getElementById("roll");
+// Initialize MDL components
+function upgradeMDL() {
+  componentHandler.upgradeAllRegistered();
+}
 
-// Only allow numbers in Student ID
-studentIdInput?.addEventListener("input", function () {
-  this.value = this.value.replace(/\D/g, '');
-});
+const studentForm = document.getElementById("studentForm");
+const studentTableBody = document.querySelector("#studentTable");
 
 let students = JSON.parse(localStorage.getItem("students")) || [];
 let editingIndex = null;
 
-// Function to populate teacher dropdown
-function populateTeacherDropdown() {
-  const teachers = JSON.parse(localStorage.getItem("teachers")) || [];
-  const teacherSelect = document.getElementById("teacher");
-  teacherSelect.innerHTML = '<option value="">Select Teacher</option>';
-  teachers.forEach(teacher => {
-    teacherSelect.innerHTML += `<option value="${teacher.name}">${teacher.name} (${teacher.subject})</option>`;
-  });
-}
-
-// Function to populate class dropdown
-function populateClassDropdown() {
+// Populate dropdowns
+function populateDropdowns() {
   const classes = JSON.parse(localStorage.getItem("classes")) || [];
+  const teachers = JSON.parse(localStorage.getItem("teachers")) || [];
+  
   const classSelect = document.getElementById("class");
+  const teacherSelect = document.getElementById("teacher");
+  
   classSelect.innerHTML = '<option value="">Select Class</option>';
+  teacherSelect.innerHTML = '<option value="">Select Teacher</option>';
+  
   classes.forEach(cls => {
-    classSelect.innerHTML += `<option value="${cls.className}-${cls.section}">${cls.className}-${cls.section}</option>`;
+    classSelect.innerHTML += `
+      <option value="${cls.className}-${cls.section}">${cls.className}-${cls.section}</option>
+    `;
   });
+  
+  teachers.forEach(teacher => {
+    teacherSelect.innerHTML += `
+      <option value="${teacher.name}">${teacher.name} (${teacher.subject})</option>
+    `;
+  });
+
+  upgradeMDL();
 }
 
-// Function to generate roll number
+// Generate roll number for new students
 function generateRollNumber(className) {
   const classStudents = students.filter(student => student.className === className);
   return (classStudents.length + 1).toString().padStart(2, '0');
 }
 
-// Add a teacher field to the student object
-const teacherInput = document.createElement("input");
-teacherInput.setAttribute("type", "text");
-teacherInput.setAttribute("id", "teacher");
-teacherInput.setAttribute("placeholder", "Class Teacher");
-teacherInput.required = true;
-studentForm.insertBefore(teacherInput, studentForm.querySelector("button"));
-
-// Render Students Table
+// Render students table
 function renderStudents() {
   studentTableBody.innerHTML = "";
   students.forEach((student, index) => {
-    const isEditing = editingIndex === index;
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${student.name}</td>
-      <td>${student.className}</td>
+      <td class="mdl-data-table__cell--non-numeric">${student.name}</td>
+      <td class="mdl-data-table__cell--non-numeric">${student.className}</td>
       <td>${student.rollNumber}</td>
-      <td>${student.teacher}</td>
+      <td class="mdl-data-table__cell--non-numeric">${student.teacher}</td>
       <td>${student.contactNumber}</td>
-      <td>
-        ${
-          isEditing
-            ? `
-              <button class="update-btn" data-index="${index}">Update</button>
-              <button class="cancel-btn" data-index="${index}">Cancel</button>
-              <button class="delete-btn" data-index="${index}">Delete</button>
-            `
-            : `<button class="edit-btn" data-index="${index}">Edit</button>`
-        }
+      <td class="mdl-data-table__cell--non-numeric">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored edit-btn" data-index="${index}">
+          <i class="material-icons">edit</i> Edit
+        </button>
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent delete-btn" data-index="${index}">
+          <i class="material-icons">delete</i> Delete
+        </button>
       </td>
     `;
     studentTableBody.appendChild(row);
   });
+  upgradeMDL();
 }
 
-// Save to Local Storage
+// Save to LocalStorage
 function saveStudents() {
   localStorage.setItem("students", JSON.stringify(students));
 }
 
-// Form Submission
+// Handle form submission
 studentForm?.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const studentName = document.getElementById("name").value.trim();
-  const className = document.getElementById("class").value.trim();
-  const teacher = document.getElementById("teacher").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const className = document.getElementById("class").value;
+  const teacher = document.getElementById("teacher").value;
   const contactNumber = document.getElementById("contactNumber").value.trim();
 
-  if (!studentName || !className || !teacher || !contactNumber) {
-    alert("Please fill in all fields");
+  if (!name || !className || !teacher || !contactNumber) {
+    const data = { message: 'Please fill in all fields' };
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
     return;
   }
 
@@ -96,17 +91,17 @@ studentForm?.addEventListener("submit", function (e) {
     : generateRollNumber(className);
 
   const newStudent = { 
-    name: studentName, 
-    className: className, 
-    rollNumber: rollNumber,
-    teacher: teacher,
-    contactNumber: contactNumber 
+    name, 
+    className, 
+    rollNumber,
+    teacher,
+    contactNumber 
   };
 
   if (editingIndex !== null) {
     students[editingIndex] = newStudent;
     editingIndex = null;
-    studentForm.querySelector("button[type='submit']").textContent = "Add Student";
+    studentForm.querySelector("button[type='submit']").innerHTML = '<i class="material-icons">add</i> Add Student';
   } else {
     students.push(newStudent);
   }
@@ -114,77 +109,100 @@ studentForm?.addEventListener("submit", function (e) {
   saveStudents();
   renderStudents();
   studentForm.reset();
+  
+  // Reset MDL textfields
+  const textFields = document.querySelectorAll('.mdl-textfield');
+  textFields.forEach(field => {
+    field.classList.remove('is-dirty');
+    field.MaterialTextfield.boundUpdateClassesHandler();
+  });
+
+  const data = {
+    message: editingIndex !== null ? 'Student updated successfully' : 'Student added successfully',
+    timeout: 2000
+  };
+  snackbarContainer.MaterialSnackbar.showSnackbar(data);
 });
 
-// Handle Edit / Update / Cancel / Delete
+// Handle edit/delete buttons
 studentTableBody?.addEventListener("click", function (e) {
-  const index = parseInt(e.target.getAttribute("data-index"));
+  const button = e.target.closest('button');
+  if (!button) return;
+  
+  const index = parseInt(button.getAttribute("data-index"));
+  if (isNaN(index)) return;
 
-  if (e.target.classList.contains("edit-btn")) {
+  if (button.classList.contains('edit-btn')) {
     const student = students[index];
     document.getElementById("name").value = student.name;
     document.getElementById("class").value = student.className;
     document.getElementById("teacher").value = student.teacher;
     document.getElementById("contactNumber").value = student.contactNumber;
+    
+    // Update MDL text fields
+    const textFields = document.querySelectorAll('.mdl-textfield');
+    textFields.forEach(field => {
+      field.classList.add('is-dirty');
+      field.MaterialTextfield.boundUpdateClassesHandler();
+    });
+
     editingIndex = index;
+    studentForm.querySelector("button[type='submit']").innerHTML = '<i class="material-icons">save</i> Update Student';
     renderStudents();
   }
 
-  if (e.target.classList.contains("update-btn")) {
-    const updatedName = document.getElementById("name").value.trim();
-    const updatedClass = document.getElementById("class").value.trim();
-    const updatedId = studentIdInput.value.trim();
-    const updatedTeacher = document.getElementById("teacher").value.trim();
-
-    students[index] = { name: updatedName, className: updatedClass, id: updatedId, teacher: updatedTeacher };
-    saveStudents();
-    editingIndex = null;
-    studentForm.reset();
-    renderStudents();
-  }
-
-  if (e.target.classList.contains("cancel-btn")) {
-    editingIndex = null;
-    studentForm.reset();
-    renderStudents();
-  }
-
-  if (e.target.classList.contains("delete-btn")) {
-    const confirmed = confirm("Are you sure you want to delete this student?");
-    if (confirmed) {
+  if (button.classList.contains('delete-btn')) {
+    const dialog = document.createElement('dialog');
+    dialog.classList.add('mdl-dialog');
+    dialog.innerHTML = `
+      <h4 class="mdl-dialog__title">Delete Student</h4>
+      <div class="mdl-dialog__content">
+        <p>Are you sure you want to delete this student?</p>
+      </div>
+      <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button confirm">Delete</button>
+        <button type="button" class="mdl-button close">Cancel</button>
+      </div>
+    `;
+    document.body.appendChild(dialog);
+    dialogPolyfill.registerDialog(dialog);
+    
+    dialog.querySelector('.confirm').addEventListener('click', function() {
       students.splice(index, 1);
       saveStudents();
       editingIndex = null;
       studentForm.reset();
       renderStudents();
-    }
+      dialog.close();
+      
+      const data = {
+        message: 'Student deleted successfully',
+        timeout: 2000
+      };
+      snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    });
+
+    dialog.querySelector('.close').addEventListener('click', function() {
+      dialog.close();
+    });
+
+    dialog.showModal();
   }
 });
 
-// Dark Mode Toggle
-const toggleBtn = document.getElementById("themeToggle");
-const savedTheme = localStorage.getItem("theme");
-
-if (savedTheme === "dark") {
-  document.body.classList.add("dark");
-  if (toggleBtn) toggleBtn.textContent = "☀️";
-}
-
-if (toggleBtn) {
-  toggleBtn.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-    const isDark = document.body.classList.contains("dark");
-    toggleBtn.textContent = isDark ? "☀️" : "🌙";
-    localStorage.setItem("theme", isDark ? "dark" : "light");
-  });
-}
-
-// Initialize dropdowns when page loads
-document.addEventListener('DOMContentLoaded', function() {
-  populateTeacherDropdown();
-  populateClassDropdown();
+// Initialize page
+document.addEventListener('DOMContentLoaded', () => {
+  // Add snackbar for notifications
+  const snackbarContainer = document.createElement('div');
+  snackbarContainer.id = 'snackbar';
+  snackbarContainer.className = 'mdl-js-snackbar mdl-snackbar';
+  snackbarContainer.innerHTML = `
+    <div class="mdl-snackbar__text"></div>
+    <button class="mdl-snackbar__action" type="button"></button>
+  `;
+  document.body.appendChild(snackbarContainer);
+  
+  populateDropdowns();
   renderStudents();
+  upgradeMDL();
 });
-
-// Initial Render
-renderStudents();
