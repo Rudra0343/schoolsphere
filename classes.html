@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Class Management</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <h1>🏫 School Management</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="students.html">Students</a></li>
+        <li><a href="teachers.html">Teachers</a></li>
+        <li><a href="classes.html" class="active">Classes</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
+        <li><a href="login.html">Login</a></li>
+        <button id="themeToggle" class="toggle-btn">🌙</button>
+        </ul>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <h2>Class Management</h2>
+
+    <form id="classForm">
+      <input type="text" id="class" placeholder="Class" required />
+      <input type="text" id="section" placeholder="Section" required />
+      <input type="text" id="roomNumber" placeholder="Room Number" required />
+      <button type="submit">Add Class</button>
+    </form>
+
+    <h3>Class List</h3>
+    <table id="classTable">
+      <thead>
+        <tr>
+          <th>Class</th>
+          <th>Section</th>
+          <th>Room No</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- JS will add rows here -->
+      </tbody>
+    </table>
+  </main>
+
+    <script src="javascript/classes.js"></script>
+    
+</body>
+</html>

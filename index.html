@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School Management</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+  
+</head>
+<body class="dark">
+  <header>
+    <nav class="navbar">
+      <h1>🏫 School Management</h1>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Dashboard</a></li>
+        <li><a href="students.html">Students</a></li>
+        <li><a href="teachers.html">Teachers</a></li>
+        <li><a href="classes.html">Classes</a></li>
+        <li><a href="signup.html">Signup</a></li>
+        <li><a href="login.html">Login</a></li>
+        <button id="themeToggle" class="toggle-btn">🌙</button>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Welcome to <span>School Management System</span></h1>
+  </section>
+
+  <section class="cards">
+    <div class="cards">
+      <div class="card students">
+        <div class="card-icon">
+          <i class="fas fa-user-graduate"></i>
+        </div>
+        <h3>Students</h3>
+        <p>Manage student information</p>
+        <a href="students.html">
+          <button class="blue-btn">Manage</button>
+        </a>
+      </div>
+    
+      <div class="card teachers">
+        <div class="card-icon">
+          <i class="fas fa-chalkboard-teacher"></i>
+        </div>
+        <h3>Teachers</h3>
+        <p>Manage teacher information</p>
+        <a href="teachers.html">
+          <button class="green-btn">Manage</button>
+        </a>
+      </div>
+    
+      <div class="card classes">
+        <div class="card-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h3>Classes</h3>
+        <p>View class schedules</p>
+        <a href="classes.html">
+          <button class="purple-btn">View</button>
+        </a>
+      </div>
+    </div>
+    
+  </section>
+
+  <script src="javascript/index.js"></script>
+</body>
+</html>

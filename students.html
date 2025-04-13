@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Management</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <h1>🏫 School Management</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="students.html" class="active">Students</a></li>
+        <li><a href="teachers.html">Teachers</a></li>
+        <li><a href="classes.html">Classes</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
+        <li><a href="login.html">Login</a></li>
+        <button id="themeToggle" class="toggle-btn">🌙</button>
+    </ul>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <h2>Student Management</h2>
+
+    <form id="studentForm">
+      <input type="text" id="name" placeholder="Student Name" required />
+      <input type="text" id="roll" placeholder="Roll Number" required />
+      <input type="text" id="class" placeholder="Class" required />
+      <input type="text" id="Contact Number" placeholder="Contact Number" required />
+      <button type="submit">Add Student</button>
+    </form>
+
+    
+    <h3>Student List</h3>
+    <table id="studentTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Class</th>
+          <th>Roll No</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+    
+      </tbody>
+    </table>
+  </main>
+
+  
+
+  <!-- Link to JS file -->
+  <script src="javascript/student.js"></script>
+  
+</body>
+</html>

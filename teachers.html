@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Management</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <h1>🏫 School Management</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="students.html">Students</a></li>
+        <li><a href="teachers.html" class="active">Teachers</a></li>
+        <li><a href="classes.html">Classes</a></li>
+        <li><a href="signup.html">Sign Up</a></li>  
+        <li><a href="login.html">Login</a></li>
+        <button id="themeToggle" class="toggle-btn">🌙</button>
+
+      </ul>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <h2>Teacher Management</h2>
+
+    <form id="teacherForm">
+      <input type="text" id="teacherName" placeholder="Teacher Name" required />
+      <select id="subject" required>
+        <option value="">Select Subject</option>
+        <option value="MATH">MATH</option>
+        <option value="SCIENCE">SCIENCE</option>
+        <option value="ENG">ENG</option>
+        <option value="GUJARATI">GUJARATI</option>
+        <option value="SOCIAL SCIENCE">SOCIAL SCIENCE</option>
+      </select>
+      <input type="text" id="teacherId" placeholder="Teacher ID" required />
+      <button type="submit">Add Teacher</button>
+    </form>
+
+    <h3>Teacher List</h3>
+    <table id="teacherTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Subject</th>
+          <th>Teacher ID</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- JS will add rows here -->
+      </tbody>
+    </table>
+  </main>
+
+
+
+  <script src="javascript/teachers.js"></script>
+</body>
+</html>
